@@ -1,6 +1,7 @@
 import { cache } from 'react';
 import { PublicSingleCategoryWidget }
   from '@/app/[locale]/(public)/categories/(widgets)/PublicSingleCategory.widget';
+import { Category } from '@/app/[locale]/(public)/categories/PublicCategoriesService';
 import { notFound } from 'next/navigation';
 import { ConsoleLogger } from '@/lib/logging/Console.logger';
 import { ssrModules } from '@/lib/ssr/ssr-modules';
@@ -92,7 +93,7 @@ const PublicSingleCategoryPage = async ({ params }: { params: Promise<CategoryPa
   }
 
   return (
-    <PublicSingleCategoryWidget category={category} />
+    <PublicSingleCategoryWidget category={category as Category} />
   );
 }
 

@@ -4,11 +4,11 @@ import { usePublicSearchContext } from '@/app/[locale]/(public)/(context)/Public
 import { useEffect } from 'react';
 import { PublicCardsWithFiltersWidget } from '@/app/[locale]/(public)/cards/(widgets)/PublicCardsWithFilters.widget';
 import { usePublicHeaderNavContext } from '@/app/[locale]/(public)/(context)/PublicHeaderNavContext';
-import { Category } from '@/app/[locale]/(public)/categories/PublicCategoriesService';
+import { Category } from '@/lib/domain/categories/Categories.types';
 import { lt } from '@/lib/utils/Localized.util';
 
 interface PublicCategoriesCatalogueWidgetsProps {
-    category: Category;
+    category: Category.PublicAccess;
 }
 
 export function PublicCategoriesCatalogueWidgets({ category }: PublicCategoriesCatalogueWidgetsProps) {
@@ -23,7 +23,7 @@ export function PublicCategoriesCatalogueWidgets({ category }: PublicCategoriesC
                     category: {
                         id: category.id,
                         title: category.title,
-                        slug: category.slug || ''
+                        slug: category.title?.az || category.title?.en || ''
                     }
                 }
             });

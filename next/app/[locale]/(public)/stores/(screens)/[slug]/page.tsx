@@ -8,7 +8,8 @@ import { ssrModules } from '@/lib/ssr/ssr-modules';
 // Cached data fetching function
 const getStoreData = cache(async (id: string) => {
   try {
-    return await ssrModules().provider.get(id);
+    const result = await ssrModules().provider.get(id);
+    return result?.workspace || null;
   } catch (error) {
     ConsoleLogger.error('Error fetching store:', error);
     return null;
@@ -40,10 +41,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: store.title,
-    description: store.description,
+    description: (store as any).profile?.description || store.title,
     openGraph: {
       title: store.title,
-      description: store.description,
+      description: (store as any).profile?.description || store.title,
       type: 'website',
       url: `${process.env.NEXT_PUBLIC_SITE_URL}/stores/${slug}`,
     },
@@ -67,7 +68,7 @@ const PublicStoreDetailsPage = async ({ params }: { params: Promise<{ slug: stri
     notFound();
   }
 
-  return <PublicStoreDetailsWidget store={store} />;
+  return <PublicStoreDetailsWidget store={store as any} />;
 };
 
 export default PublicStoreDetailsPage;

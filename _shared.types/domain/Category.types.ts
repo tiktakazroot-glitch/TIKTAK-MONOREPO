@@ -24,6 +24,7 @@ export namespace Category {
         parentId?: string | null;
         icon?: string | null;
         isActive: boolean | null;
+        [key: string]: unknown;
     }
 
     /** Tree view — hierarchical structure for category navigation */

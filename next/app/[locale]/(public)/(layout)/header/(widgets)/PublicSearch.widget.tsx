@@ -214,6 +214,7 @@ export function PublicSearchWidget({ hideOnCardFilters = false }: PublicSearchWi
                                                                 width={64}
                                                                 height={64}
                                                                 className="h-16 w-16 object-cover rounded-md"
+                                                                onError={(e) => { e.currentTarget.src = '/pg.webp'; }}
                                                             />
                                                         ) : (
                                                             <div className="h-16 w-16 bg-gray-100 rounded-md flex items-center justify-center">
@@ -333,6 +334,7 @@ export function PublicSearchWidget({ hideOnCardFilters = false }: PublicSearchWi
                                                             width={64}
                                                             height={64}
                                                             className="h-16 w-16 object-cover rounded-md"
+                                                            onError={(e) => { e.currentTarget.src = '/pg.webp'; }}
                                                         />
                                                     ) : (
                                                         <div className="h-16 w-16 bg-gray-100 rounded-md flex items-center justify-center">

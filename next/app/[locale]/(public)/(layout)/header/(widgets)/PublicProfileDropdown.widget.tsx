@@ -192,7 +192,7 @@ function PublicProfileDropdownWidget() {
         }
         const store = account.stores;
         if (!store) return null;
-        return `${Bun.env.NEXT_PUBLIC_S3_PREFIX}/stores/${store.id}/${store.logo || store.cover || null}`;
+        return `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${store.id}/${store.logo || store.cover || null}`;
     }, [currentUser]);
 
     const getAccountSubtitle = useCallback((account: any) => {
@@ -228,15 +228,22 @@ function PublicProfileDropdownWidget() {
 
     return (
         <div className="relative">
-            <button
-                ref={buttonRef}
-                onClick={handleDropdownClick}
-                className="flex items-center gap-2 p-2 hover:bg-app-bright-purple rounded-md transition-colors"
-                disabled={isLoading}
-            >
-                <PiUserCircleLight className='text-white text-3xl' />
-                <PiCaretDownLight className={`text-white text-lg transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
-            </button>
+            <div className="flex items-center gap-1">
+                <Link
+                    href="/workspaces/profile"
+                    className="p-2 hover:bg-app-bright-purple rounded-md transition-colors"
+                >
+                    <PiUserCircleLight className='text-white text-3xl' />
+                </Link>
+                <button
+                    ref={buttonRef}
+                    onClick={handleDropdownClick}
+                    className="p-1 hover:bg-app-bright-purple rounded-md transition-colors"
+                    disabled={isLoading}
+                >
+                    <PiCaretDownLight className={`text-white text-lg transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                </button>
+            </div>
 
             {/* Responsive positioned dropdown */}
             {isOpen && (
@@ -328,7 +335,7 @@ function PublicProfileDropdownWidget() {
                             {/* Menu Actions */}
                             <div className="border-t border-gray-100">
                                 <Link
-                                    href="/provider/accounts/me"
+                                    href="/workspaces/profile"
                                     className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left text-sm"
                                     onClick={() => setIsOpen(false)}
                                 >

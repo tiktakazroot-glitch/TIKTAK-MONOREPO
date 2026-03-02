@@ -1,10 +1,9 @@
 import { cache } from 'react';
 import { PublicSingleCategoryWidget }
   from '@/app/[locale]/(public)/categories/(widgets)/PublicSingleCategory.widget';
-import { fetch as apiCallForSsrHelper } from '@/lib/utils/Http.FetchApiSSR.util';
 import { notFound } from 'next/navigation';
-
 import { ConsoleLogger } from '@/lib/logging/Console.logger';
+import { ssrModules } from '@/lib/ssr/ssr-modules';
 
 interface CategoryPageParams {
   slug: string;
@@ -20,14 +19,7 @@ const extractIdFromSlug = (slug: string): string | null => {
 
 const getCategoryData = cache(async (id: string) => {
   try {
-    const response = await apiCallForSsrHelper({
-      url: `/api/categories/${id}`,
-    });
-
-    // SSR fetch returns raw axios response
-    // API response envelope: { success, data: { category } }
-    const envelope = response.data;
-    return envelope?.data?.category || envelope?.category || null;
+    return await ssrModules().categories.getCategoryById(id);
   } catch (error) {
     const err = error as Error;
     ConsoleLogger.error('Error fetching category:', err.message);

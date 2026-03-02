@@ -40,7 +40,7 @@ export function PublicBreadCrumbsTile({ categories }: PublicBreadCrumbsTileProps
                 alt=""
                 className="h-10"
               />
-              <Link href={`/categories/${generateSlug(lt(category.title))}-${category.id}c`} passHref locale={locale}>
+              <Link href={`/categories/${generateSlug(lt(category.title))}-${category.id}`} passHref locale={locale}>
                 <span className="text-sm font-semibold text-gray-900/50 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:underline cursor-pointer transition-colors whitespace-nowrap">
                   {lt(category.title)}
                 </span>

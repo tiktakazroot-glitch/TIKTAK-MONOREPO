@@ -21,13 +21,6 @@ export function PublicSingleMarkerMapWidget({ location }: PublicSingleMarkerMapW
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const mapStyle = useMapboxStyle();
 
-  // Re-apply style when theme changes
-  useEffect(() => {
-    if (mapRef.current) {
-      mapRef.current.setStyle(mapStyle);
-    }
-  }, [mapStyle]);
-
   useEffect(() => {
     if (!location || typeof location.lat !== 'number' || typeof location.lng !== 'number') return;
     if (!mapContainerRef.current) return;
@@ -51,8 +44,7 @@ export function PublicSingleMarkerMapWidget({ location }: PublicSingleMarkerMapW
     });
 
     return () => { map.remove(); mapRef.current = null; };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location]);
+  }, [location, mapStyle]);
 
   if (!location) return null;
 

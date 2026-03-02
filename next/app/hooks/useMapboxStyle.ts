@@ -6,46 +6,32 @@ const DARK_STYLE = '/mapbox-style-dark.json';
 const LIGHT_STYLE = '/mapbox-style-light.json';
 
 /**
- * Returns the correct Mapbox style URL based on the current
- * color scheme (dark / light). Re-evaluates whenever the OS
- * or app theme changes.
+ * Returns the correct Mapbox style URL based on the app's
+ * dark/light theme (the `dark` class on <html>).
+ * Re-evaluates whenever the class changes.
  */
 export function useMapboxStyle(): string {
     const [style, setStyle] = useState<string>(() => {
-        // SSR-safe: default to dark, reconcile on client
-        if (typeof window === 'undefined') return DARK_STYLE;
-        const isDark = document.documentElement.classList.contains('dark')
-            || window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const isDark = document.documentElement.classList.contains('dark');
         return isDark ? DARK_STYLE : LIGHT_STYLE;
     });
 
     useEffect(() => {
-        // 1. Watch the <html> class for Tailwind dark-mode class toggling
         const htmlEl = document.documentElement;
-        const classObserver = new MutationObserver(() => {
+
+        const update = () => {
             const isDark = htmlEl.classList.contains('dark');
             setStyle(isDark ? DARK_STYLE : LIGHT_STYLE);
-        });
-        classObserver.observe(htmlEl, { attributes: true, attributeFilter: ['class'] });
-
-        // 2. Also watch the OS-level prefers-color-scheme media query
-        const mq = window.matchMedia('(prefers-color-scheme: dark)');
-        const mqHandler = (e: MediaQueryListEvent) => {
-            // Only apply if no explicit dark class is set
-            if (!htmlEl.classList.contains('dark')) {
-                setStyle(e.matches ? DARK_STYLE : LIGHT_STYLE);
-            }
         };
-        mq.addEventListener('change', mqHandler);
 
-        // Set initial value on mount (handles SSR mismatch)
-        const isDark = htmlEl.classList.contains('dark') || mq.matches;
-        setStyle(isDark ? DARK_STYLE : LIGHT_STYLE);
+        // Watch the <html> class for dark-mode toggling
+        const observer = new MutationObserver(update);
+        observer.observe(htmlEl, { attributes: true, attributeFilter: ['class'] });
 
-        return () => {
-            classObserver.disconnect();
-            mq.removeEventListener('change', mqHandler);
-        };
+        // Reconcile on mount
+        update();
+
+        return () => observer.disconnect();
     }, []);
 
     return style;

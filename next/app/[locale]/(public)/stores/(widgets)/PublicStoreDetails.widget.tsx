@@ -86,7 +86,7 @@ const PublicStoreDetailsWidget = ({ store }: PublicStoreDetailsWidgetProps) => {
           <div className='relative w-full aspect-2/1 md:aspect-3/1 lg:aspect-4/1 xl:aspect-5/1  flex items-center'>
             <div className='absolute w-full top-0 z-2 h-full'>
               <Image
-                src={store?.cover ? `https://s3.tebi.io/tiktak/stores/${store.id}/${store.cover}` : '/pg.webp'}
+                src={store?.cover ? `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${store.id}/${store.cover}` : '/pg.webp'}
                 alt="Store cover"
                 fill
                 className="w-full h-full object-cover rounded-lg"
@@ -95,7 +95,7 @@ const PublicStoreDetailsWidget = ({ store }: PublicStoreDetailsWidgetProps) => {
             </div>
             <div className='absolute left-4 w-36 h-36 flex items-center z-3'>
               <Image
-                src={store?.logo ? `https://s3.tebi.io/tiktak/stores/${store.id}/${store.logo}` : '/pg.webp'}
+                src={store?.logo ? `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${store.id}/${store.logo}` : '/pg.webp'}
                 alt="Store logo"
                 fill
                 className="rounded-full object-cover border-2 border-white"

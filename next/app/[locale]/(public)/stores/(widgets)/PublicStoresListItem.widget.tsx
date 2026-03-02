@@ -26,11 +26,11 @@ export function PublicStoresListItemWidget({ store }: PublicStoresListItemWidget
     const slug = generateSlug(store.title || 'store');
 
     const coverSrc = store?.cover
-        ? `https://s3.tebi.io/tiktak/stores/${store.id}/${store.cover}`
+        ? `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${store.id}/${store.cover}`
         : '/pg.webp';
 
     const logoSrc = store?.logo
-        ? `https://s3.tebi.io/tiktak/stores/${store.id}/${store.logo}`
+        ? `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${store.id}/${store.logo}`
         : '/pg.webp';
 
     return (

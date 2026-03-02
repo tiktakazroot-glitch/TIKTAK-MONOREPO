@@ -156,7 +156,7 @@ function PublicAccountWidget() {
         {/* Avatar */}
         <div className='relative'>
           <img
-            src={`https://s3.tebi.io/tiktak/avatars/${account.id}/${account.avatar}`}
+            src={`${process.env.NEXT_PUBLIC_S3_PREFIX}/avatars/${account.id}/${account.avatar}`}
             alt=" "
             className="rounded-full w-32 h-32 object-cover bg-gray-100"
           />

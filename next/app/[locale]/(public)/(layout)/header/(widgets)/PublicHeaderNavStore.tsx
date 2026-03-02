@@ -26,9 +26,9 @@ export function PublicHeaderNavStore({ navData, isCataloguePage }: { navData: Na
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const storeLogo = navData?.logo
-    ? `https://s3.tebi.io/tiktak/stores/${navData.id}/${navData.logo}`
+    ? `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${navData.id}/${navData.logo}`
     : '/pg.webp';
-  
+
   // Generate slug on-the-fly from store title
   const storeSlug = generateSlug(navData?.store?.title || 'store');
 

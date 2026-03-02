@@ -44,6 +44,7 @@ export function PublicBlogsListWidget() {
                                 src={blog.cover ? sanityImageUrl(blog.cover).width(800).url() : '/pg.webp'}
                                 fill
                                 alt={blog.title || 'Blog title'}
+                                onError={(e) => { e.currentTarget.src = '/pg.webp'; }}
                             />
                         </div>
                         <div className="flex col-span-12 flex-col w-full justify-center items-start py-6 tracking-wide">

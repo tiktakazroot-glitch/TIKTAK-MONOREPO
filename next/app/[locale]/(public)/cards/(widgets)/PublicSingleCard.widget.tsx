@@ -266,6 +266,7 @@ const PublicSingleCardWidget = ({ card }: PublicSingleCardWidgetProps) => {
                         height={50}
                         src={card.workspace.logo ? `${process.env.NEXT_PUBLIC_S3_PREFIX}/stores/${card.workspace.id}/${card.workspace.logo}` : '/pg.webp'}
                         alt={card.workspace.title || 'Store'}
+                        onError={(e) => { e.currentTarget.src = '/pg.webp'; }}
                       />
                     </Link>
                     <div className="flex flex-col justify-center">

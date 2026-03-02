@@ -45,6 +45,7 @@ export function PublicSingleBlogWidget() {
               src={sanityImageUrl(blog.cover).width(1200).url()}
               fill
               alt={blog.title || 'Blog title'}
+              onError={(e) => { e.currentTarget.src = '/pg.webp'; }}
             />
           </div>
         )}

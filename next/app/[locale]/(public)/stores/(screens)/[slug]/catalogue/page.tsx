@@ -7,7 +7,8 @@ import { ssrModules } from '@/lib/ssr/ssr-modules';
 // Cached data fetching function - prevents duplicate fetches
 const getStoreData = cache(async (id: string) => {
   try {
-    return await ssrModules().provider.get(id);
+    const result = await ssrModules().provider.get(id);
+    return result?.workspace || null;
   } catch (error) {
     ConsoleLogger.error('Error fetching store:', error);
     return null;
@@ -45,7 +46,7 @@ const StoreCataloguePage = async ({ params }: { params: Promise<{ slug: string }
   if (!store) {
     notFound();
   }
-  return <PublicStoreCatalogueWidget store={store} />;
+  return <PublicStoreCatalogueWidget store={store as any} />;
 }
 
 export default StoreCataloguePage;

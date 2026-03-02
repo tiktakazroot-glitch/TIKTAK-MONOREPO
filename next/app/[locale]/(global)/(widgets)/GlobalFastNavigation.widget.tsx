@@ -95,13 +95,13 @@ export function GlobalFastNavigationWidget({
                     );
                 })}
 
-                {/* Announcement button */}
+                {/* Create Card button */}
                 <Link
-                    href="/announcements"
+                    href="/workspaces"
                     className="px-3 py-2 rounded-app transition-all flex items-center gap-2 text-sm font-medium text-app-dark-purple dark:text-white/80 hover:text-app-bright-purple hover:bg-app-bright-purple/5"
                 >
                     <PiMegaphoneBold size={18} />
-                    <span>Announcements</span>
+                    <span>Create Card</span>
                 </Link>
 
                 {/* Auth: Login/Register or Profile */}

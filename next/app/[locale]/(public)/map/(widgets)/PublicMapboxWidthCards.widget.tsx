@@ -14,7 +14,7 @@ import { useMapboxStyle } from '@/app/hooks/useMapboxStyle';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-mapboxgl.accessToken = Bun.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
 
 import type { Card } from '@tiktak/shared/types/domain/Card.types';
 

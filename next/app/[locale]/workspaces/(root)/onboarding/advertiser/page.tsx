@@ -3,17 +3,16 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { apiCall } from '@/lib/utils/Http.FetchApiSPA.util';
-import { PiStorefront, PiArrowLeft, PiArrowRight, PiCheckCircle } from "react-icons/pi";
+import { PiMegaphoneBold, PiArrowLeft, PiArrowRight, PiCheckCircle } from "react-icons/pi";
 import { toast } from "react-toastify";
 import { BlockPrimitive, BlockHeader, BlockTitle, BlockDescription, BlockContent, BlockFooter } from "@/app/primitives/Block.primitive";
 import { ButtonPrimitive } from "@/app/primitives/Button.primitive";
 
-export default function ProviderOnboardingPage() {
+export default function AdvertiserOnboardingPage() {
     const router = useRouter();
     const [formData, setFormData] = useState({
         title: "",
-        address: "",
-        regNumber: "",
+        contactEmail: "",
         contactPhone: "",
         website: "",
     });
@@ -25,7 +24,7 @@ export default function ProviderOnboardingPage() {
     };
 
     const handleSubmit = async () => {
-        if (!formData.title || !formData.address) {
+        if (!formData.title) {
             toast.warn("Please fill in the required fields");
             return;
         }
@@ -36,7 +35,7 @@ export default function ProviderOnboardingPage() {
                 url: "/api/workspaces/onboarding",
                 method: "POST",
                 body: {
-                    type: "provider",
+                    type: "advertiser",
                     data: {
                         title: formData.title,
                         orgDetails: formData
@@ -69,7 +68,7 @@ export default function ProviderOnboardingPage() {
                                 </div>
                                 <h1 className="text-3xl font-bold text-app-dark-purple dark:text-white mb-3 tracking-tight">Application Submitted!</h1>
                                 <p className="text-app-dark-purple/50 dark:text-white/50 font-medium leading-relaxed mb-8">
-                                    Your store application is under review. We&apos;ll notify you once it&apos;s approved.
+                                    Your advertiser application is under review. We&apos;ll notify you once it&apos;s approved.
                                 </p>
                                 <ButtonPrimitive variant="default" onClick={() => router.push("/workspaces")}>
                                     Go to Workspaces
@@ -85,7 +84,7 @@ export default function ProviderOnboardingPage() {
     return (
         <div className="min-h-[80vh] p-6 flex flex-col items-center justify-center">
             <div className="fixed inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-1/4 -left-32 w-96 h-96 bg-app-bright-purple/10 dark:bg-app-bright-purple/20 rounded-full blur-[128px]" />
+                <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-app-bright-cyan/8 dark:bg-app-bright-cyan/15 rounded-full blur-[128px]" />
             </div>
 
             <div className="relative max-w-2xl w-full z-10">
@@ -98,53 +97,41 @@ export default function ProviderOnboardingPage() {
                     </BlockContent>
 
                     <BlockHeader>
-                        <div className="w-12 h-12 bg-app-bright-purple/15 text-app-bright-purple rounded-xl flex items-center justify-center text-xl mb-2">
-                            <PiStorefront />
+                        <div className="w-12 h-12 bg-app-bright-cyan/15 text-app-bright-cyan rounded-xl flex items-center justify-center text-xl mb-2">
+                            <PiMegaphoneBold />
                         </div>
                         <BlockTitle>
-                            Register as a <span className="text-app-bright-purple">Store</span>
+                            Register as an <span className="text-app-bright-cyan">Advertiser</span>
                         </BlockTitle>
                         <BlockDescription>
-                            Tell us about your store. We&apos;ll review and approve your application.
+                            Tell us about your brand. Start promoting and reaching your audience.
                         </BlockDescription>
                     </BlockHeader>
 
                     <BlockContent>
                         <div className="space-y-5">
                             <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-app-dark-purple/40 dark:text-white/40 ml-1">Store Name *</label>
+                                <label className="text-xs font-bold uppercase tracking-widest text-app-dark-purple/40 dark:text-white/40 ml-1">Company / Brand Name *</label>
                                 <input
                                     type="text"
                                     name="title"
                                     value={formData.title}
                                     onChange={handleInputChange}
-                                    className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-purple/50 transition-colors"
-                                    placeholder="Your store name"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold uppercase tracking-widest text-app-dark-purple/40 dark:text-white/40 ml-1">Address *</label>
-                                <input
-                                    type="text"
-                                    name="address"
-                                    value={formData.address}
-                                    onChange={handleInputChange}
-                                    className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-purple/50 transition-colors"
-                                    placeholder="Store address"
+                                    className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-cyan/50 transition-colors"
+                                    placeholder="Your company or brand name"
                                 />
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div className="space-y-2">
-                                    <label className="text-xs font-bold uppercase tracking-widest text-app-dark-purple/40 dark:text-white/40 ml-1">Registration Number</label>
+                                    <label className="text-xs font-bold uppercase tracking-widest text-app-dark-purple/40 dark:text-white/40 ml-1">Contact Email</label>
                                     <input
-                                        type="text"
-                                        name="regNumber"
-                                        value={formData.regNumber}
+                                        type="email"
+                                        name="contactEmail"
+                                        value={formData.contactEmail}
                                         onChange={handleInputChange}
-                                        className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-purple/50 transition-colors"
-                                        placeholder="Optional"
+                                        className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-cyan/50 transition-colors"
+                                        placeholder="email@company.com"
                                     />
                                 </div>
                                 <div className="space-y-2">
@@ -154,10 +141,22 @@ export default function ProviderOnboardingPage() {
                                         name="contactPhone"
                                         value={formData.contactPhone}
                                         onChange={handleInputChange}
-                                        className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-purple/50 transition-colors"
+                                        className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-cyan/50 transition-colors"
                                         placeholder="+994 XX XXX XX XX"
                                     />
                                 </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold uppercase tracking-widest text-app-dark-purple/40 dark:text-white/40 ml-1">Website</label>
+                                <input
+                                    type="url"
+                                    name="website"
+                                    value={formData.website}
+                                    onChange={handleInputChange}
+                                    className="w-full h-14 px-5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-app text-app-dark-purple dark:text-white font-medium placeholder-app-dark-purple/25 dark:placeholder-white/25 outline-none focus:border-app-bright-cyan/50 transition-colors"
+                                    placeholder="https://yourcompany.com"
+                                />
                             </div>
                         </div>
                     </BlockContent>

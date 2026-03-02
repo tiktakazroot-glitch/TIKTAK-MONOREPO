@@ -236,6 +236,15 @@ export const publicRoutes: RoutesMap = {
     authRequired: false,
     type: "page",
   }),
+
+  // ============================================
+  // Map Page
+  // ============================================
+  "/map": createRoute({
+    method: "GET",
+    authRequired: false,
+    type: "page",
+  }),
 };
 
 /**

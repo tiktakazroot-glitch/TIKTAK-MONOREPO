@@ -84,6 +84,11 @@ export const workspacesRootRoutes: RoutesMap = {
     authRequired: true,
     type: "page",
   }),
+  "/workspaces/onboarding/advertiser": createRoute({
+    method: "GET",
+    authRequired: true,
+    type: "page",
+  }),
 
   "/workspaces/enroll/:providerId": createRoute({
     method: "GET",

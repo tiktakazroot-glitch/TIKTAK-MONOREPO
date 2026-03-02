@@ -2,13 +2,13 @@
     "version": 8,
     "name": "TikTak Light",
     "sources": {
-        "openmaptiles": {
+        "mapbox-streets": {
             "type": "vector",
-            "url": "https://api.maptiler.com/tiles/v3/tiles.json?key=get_your_own_OpIi9ZULNHzrESv6T2vL"
+            "url": "mapbox://mapbox.mapbox-streets-v8"
         }
     },
-    "glyphs": "https://fonts.openmaptiles.org/{fontstack}/{range}.pbf",
-    "sprite": "https://openmaptiles.github.io/osm-bright-gl-style/sprite",
+    "glyphs": "mapbox://fonts/mapbox/{fontstack}/{range}.pbf",
+    "sprite": "mapbox://sprites/mapbox/streets-v12",
     "layers": [
         {
             "id": "background",
@@ -20,7 +20,7 @@
         {
             "id": "landuse",
             "type": "fill",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "landuse",
             "paint": {
                 "fill-color": "#eeeeff"
@@ -29,7 +29,7 @@
         {
             "id": "landuse-residential",
             "type": "fill",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "landuse",
             "filter": [
                 "==",
@@ -43,7 +43,7 @@
         {
             "id": "landuse-park",
             "type": "fill",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "landuse",
             "filter": [
                 "in",
@@ -61,7 +61,7 @@
         {
             "id": "landuse-industrial",
             "type": "fill",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "landuse",
             "filter": [
                 "==",
@@ -75,7 +75,7 @@
         {
             "id": "water",
             "type": "fill",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "water",
             "paint": {
                 "fill-color": "#b0f0dc"
@@ -84,7 +84,7 @@
         {
             "id": "water-outline",
             "type": "line",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "water",
             "paint": {
                 "line-color": "#4EFFB8",
@@ -94,7 +94,7 @@
         {
             "id": "waterway",
             "type": "line",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "waterway",
             "paint": {
                 "line-color": "#4EFFB8",
@@ -116,7 +116,7 @@
         {
             "id": "building",
             "type": "fill",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "building",
             "paint": {
                 "fill-color": "#dcdaff",
@@ -138,7 +138,7 @@
         {
             "id": "building-outline",
             "type": "line",
-            "source": "openmaptiles",
+            "source": "mapbox-streets",
             "source-layer": "building",
             "paint": {
                 "line-color": "rgba(91, 35, 255, 0.13)",
@@ -148,8 +148,8 @@
         {
             "id": "road-path",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "transportation",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
@@ -168,12 +168,13 @@
         {
             "id": "road-minor",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "transportation",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
-                "minor",
+                "street",
+                "street_limited",
                 "service",
                 "tertiary"
             ],
@@ -197,8 +198,8 @@
         {
             "id": "road-secondary",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "transportation",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
@@ -225,8 +226,8 @@
         {
             "id": "road-major",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "transportation",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
@@ -253,8 +254,8 @@
         {
             "id": "road-major-glow",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "transportation",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
@@ -283,12 +284,12 @@
         {
             "id": "boundary-country",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "boundary",
+            "source": "mapbox-streets",
+            "source-layer": "admin",
             "filter": [
                 "==",
                 "admin_level",
-                2
+                0
             ],
             "paint": {
                 "line-color": "rgba(91, 35, 255, 0.5)",
@@ -314,12 +315,12 @@
         {
             "id": "boundary-region",
             "type": "line",
-            "source": "openmaptiles",
-            "source-layer": "boundary",
+            "source": "mapbox-streets",
+            "source-layer": "admin",
             "filter": [
                 "==",
                 "admin_level",
-                4
+                1
             ],
             "paint": {
                 "line-color": "rgba(91, 35, 255, 0.25)",
@@ -333,17 +334,28 @@
         {
             "id": "place-country",
             "type": "symbol",
-            "source": "openmaptiles",
-            "source-layer": "place",
+            "source": "mapbox-streets",
+            "source-layer": "place_label",
             "filter": [
                 "==",
                 "class",
                 "country"
             ],
             "layout": {
-                "text-field": "{name:latin}",
+                "text-field": [
+                    "coalesce",
+                    [
+                        "get",
+                        "name_en"
+                    ],
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
                 "text-font": [
-                    "Open Sans Bold"
+                    "Open Sans Bold",
+                    "Arial Unicode MS Bold"
                 ],
                 "text-size": [
                     "interpolate",
@@ -370,18 +382,28 @@
         {
             "id": "place-state",
             "type": "symbol",
-            "source": "openmaptiles",
-            "source-layer": "place",
+            "source": "mapbox-streets",
+            "source-layer": "place_label",
             "filter": [
-                "in",
+                "==",
                 "class",
-                "state",
-                "province"
+                "state"
             ],
             "layout": {
-                "text-field": "{name:latin}",
+                "text-field": [
+                    "coalesce",
+                    [
+                        "get",
+                        "name_en"
+                    ],
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
                 "text-font": [
-                    "Open Sans SemiBold"
+                    "Open Sans Semibold",
+                    "Arial Unicode MS Regular"
                 ],
                 "text-size": [
                     "interpolate",
@@ -407,17 +429,36 @@
         {
             "id": "place-city",
             "type": "symbol",
-            "source": "openmaptiles",
-            "source-layer": "place",
+            "source": "mapbox-streets",
+            "source-layer": "place_label",
             "filter": [
-                "==",
-                "class",
-                "city"
+                "all",
+                [
+                    "==",
+                    "class",
+                    "settlement"
+                ],
+                [
+                    "in",
+                    "type",
+                    "city"
+                ]
             ],
             "layout": {
-                "text-field": "{name:latin}",
+                "text-field": [
+                    "coalesce",
+                    [
+                        "get",
+                        "name_en"
+                    ],
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
                 "text-font": [
-                    "Open Sans Bold"
+                    "Open Sans Bold",
+                    "Arial Unicode MS Bold"
                 ],
                 "text-size": [
                     "interpolate",
@@ -442,18 +483,37 @@
         {
             "id": "place-town",
             "type": "symbol",
-            "source": "openmaptiles",
-            "source-layer": "place",
+            "source": "mapbox-streets",
+            "source-layer": "place_label",
             "filter": [
-                "in",
-                "class",
-                "town",
-                "village"
+                "all",
+                [
+                    "==",
+                    "class",
+                    "settlement"
+                ],
+                [
+                    "in",
+                    "type",
+                    "town",
+                    "village"
+                ]
             ],
             "layout": {
-                "text-field": "{name:latin}",
+                "text-field": [
+                    "coalesce",
+                    [
+                        "get",
+                        "name_en"
+                    ],
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
                 "text-font": [
-                    "Open Sans Regular"
+                    "Open Sans Regular",
+                    "Arial Unicode MS Regular"
                 ],
                 "text-size": [
                     "interpolate",
@@ -478,8 +538,8 @@
         {
             "id": "road-label-major",
             "type": "symbol",
-            "source": "openmaptiles",
-            "source-layer": "transportation_name",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
@@ -489,9 +549,20 @@
                 "motorway"
             ],
             "layout": {
-                "text-field": "{name:latin}",
+                "text-field": [
+                    "coalesce",
+                    [
+                        "get",
+                        "name_en"
+                    ],
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
                 "text-font": [
-                    "Open Sans SemiBold"
+                    "Open Sans Semibold",
+                    "Arial Unicode MS Regular"
                 ],
                 "text-size": 12,
                 "symbol-placement": "line"
@@ -505,19 +576,31 @@
         {
             "id": "road-label-minor",
             "type": "symbol",
-            "source": "openmaptiles",
-            "source-layer": "transportation_name",
+            "source": "mapbox-streets",
+            "source-layer": "road",
             "filter": [
                 "in",
                 "class",
-                "minor",
+                "street",
+                "street_limited",
                 "service",
                 "tertiary"
             ],
             "layout": {
-                "text-field": "{name:latin}",
+                "text-field": [
+                    "coalesce",
+                    [
+                        "get",
+                        "name_en"
+                    ],
+                    [
+                        "get",
+                        "name"
+                    ]
+                ],
                 "text-font": [
-                    "Open Sans Regular"
+                    "Open Sans Regular",
+                    "Arial Unicode MS Regular"
                 ],
                 "text-size": 10,
                 "symbol-placement": "line"

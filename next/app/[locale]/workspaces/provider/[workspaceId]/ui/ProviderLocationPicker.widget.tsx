@@ -67,7 +67,7 @@ export function ProviderLocationPickerWidget({ isOpen, onClose, onLocationSelect
       }
 
       // Check for Mapbox access token
-      const token = Bun.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+      const token = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
       if (!token) {
         setError('Mapbox access token is not configured.');
         return;
@@ -197,8 +197,8 @@ export function ProviderLocationPickerWidget({ isOpen, onClose, onLocationSelect
             onClick={handleConfirm}
             disabled={!map}
             className={`font-bold py-2 px-4 rounded absolute bottom-6 right-3 ${map
-                ? 'bg-app-bright-purple hover:bg-app-bright-purple/90 text-white'
-                : 'bg-gray-400 text-gray-600 cursor-not-allowed'
+              ? 'bg-app-bright-purple hover:bg-app-bright-purple/90 text-white'
+              : 'bg-gray-400 text-gray-600 cursor-not-allowed'
               }`}
           >
             Confirm Location

@@ -22,7 +22,7 @@ export function ProviderCardImagesGalleryWidget({ images, id }: ProviderCardImag
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const imageUrlPrefix = 'https://s3.tebi.io/tiktak/cards/' + id + "/";
+  const imageUrlPrefix = `${process.env.NEXT_PUBLIC_S3_PREFIX}/cards/` + id + "/";
 
   return (
     <div className="flex flex-col items-center w-full md:w-1/2 lg:w-1/3">

@@ -231,7 +231,7 @@ export default function ProviderStoreEditWidget() {
                 <div className='relative aspect-5/1'>
                     <div className='absolute w-full top-0 z-1'>
                         <img
-                            src={`https://s3.tebi.io/tiktak/covers/${store.id}/${store.cover}`}
+                            src={`${process.env.NEXT_PUBLIC_S3_PREFIX}/covers/${store.id}/${store.cover}`}
                             alt="Avatar"
                             className="rounded-xl  object-cover aspect-5/1"
                         />
@@ -249,7 +249,7 @@ export default function ProviderStoreEditWidget() {
                     </div>
                     <div className='absolute top-0 h-full flex items-center z-2'>
                         <img
-                            src={`https://s3.tebi.io/tiktak/logos/${store.id}/${store.logo}`}
+                            src={`${process.env.NEXT_PUBLIC_S3_PREFIX}/logos/${store.id}/${store.logo}`}
                             alt="Avatar"
                             className="rounded-full w-32 h-32 object-cover border-2 border-white ml-12"
                         />

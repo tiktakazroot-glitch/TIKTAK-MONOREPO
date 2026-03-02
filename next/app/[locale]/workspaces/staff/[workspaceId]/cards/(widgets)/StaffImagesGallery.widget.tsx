@@ -17,7 +17,7 @@ export default function StaffImagesGalleryWidget({ images, storage_prefix = 'car
     setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
   };
 
-  const imageUrlPrefix = 'https://s3.tebi.io/tiktak/cards/' + storage_prefix + "/";
+  const imageUrlPrefix = `${process.env.NEXT_PUBLIC_S3_PREFIX}/cards/` + storage_prefix + "/";
 
   return (
     <div className="flex flex-col items-center w-full md:max-w-[200px] lg:max-w-[300px] pl-4">

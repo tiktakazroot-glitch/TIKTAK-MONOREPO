@@ -7,22 +7,31 @@ import { createClient } from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 import type { SanityImageSource } from '@sanity/image-url';
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!;
+// ─── Lazy Read-Only Client (CDN-cached, no token) ───
+let _sanityRead: ReturnType<typeof createClient> | null = null;
 
-// ─── Read-Only Client (CDN-cached, no token) ───
-export const sanityRead = createClient({
-    projectId,
-    dataset,
-    apiVersion: '2024-01-01',
-    useCdn: true,
-});
+function getSanityRead() {
+    if (!_sanityRead) {
+        const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+        const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
+        if (!projectId || !dataset) {
+            throw new Error('Missing NEXT_PUBLIC_SANITY_PROJECT_ID or NEXT_PUBLIC_SANITY_DATASET');
+        }
+        _sanityRead = createClient({
+            projectId,
+            dataset,
+            apiVersion: '2024-01-01',
+            useCdn: true,
+        });
+    }
+    return _sanityRead;
+}
+
+export { getSanityRead as sanityRead };
 
 // ─── Image URL Builder ───
-const builder = imageUrlBuilder(sanityRead);
-
 export function sanityImageUrl(source: SanityImageSource) {
-    return builder.image(source);
+    return imageUrlBuilder(getSanityRead()).image(source);
 }
 
 // ─── GROQ Queries ───
@@ -68,7 +77,7 @@ export const GROQ = {
  * Returns the localized content for the given locale.
  */
 export async function fetchPage(type: string, locale: string = 'en') {
-    const page = await sanityRead.fetch(GROQ.pageByType(type.toUpperCase()));
+    const page = await getSanityRead().fetch(GROQ.pageByType(type.toUpperCase()));
     if (!page) return null;
 
     // Extract localized content
@@ -84,26 +93,26 @@ export async function fetchPage(type: string, locale: string = 'en') {
  * Fetch all active blogs.
  */
 export async function fetchBlogs() {
-    return sanityRead.fetch(GROQ.allBlogs);
+    return getSanityRead().fetch(GROQ.allBlogs);
 }
 
 /**
  * Fetch all blogs (including inactive) for admin.
  */
 export async function fetchBlogsAdmin() {
-    return sanityRead.fetch(GROQ.allBlogsAdmin);
+    return getSanityRead().fetch(GROQ.allBlogsAdmin);
 }
 
 /**
  * Fetch a single blog by slug.
  */
 export async function fetchBlogBySlug(slug: string) {
-    return sanityRead.fetch(GROQ.blogBySlug(slug));
+    return getSanityRead().fetch(GROQ.blogBySlug(slug));
 }
 
 /**
  * Fetch a single blog by ID.
  */
 export async function fetchBlogById(id: string) {
-    return sanityRead.fetch(GROQ.blogById(id));
+    return getSanityRead().fetch(GROQ.blogById(id));
 }

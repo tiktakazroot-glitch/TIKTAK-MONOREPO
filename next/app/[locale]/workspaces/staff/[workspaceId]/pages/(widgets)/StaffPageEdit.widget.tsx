@@ -37,7 +37,7 @@ export function StaffPageEditWidget({ pageType, title }: StaffPageEditWidgetProp
 
     useEffect(() => {
         // Read from Sanity directly
-        sanityRead.fetch(GROQ.pageByType(pageType))
+        sanityRead().fetch(GROQ.pageByType(pageType))
             .then((page: Record<string, unknown> | null) => {
                 if (!page) return;
                 const localized = (page.localizedContent as Record<string, { content?: string }>) || {};

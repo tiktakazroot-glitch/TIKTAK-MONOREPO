@@ -1,27 +1,14 @@
 import { ConsoleLogger } from '@/lib/logging/Console.logger';
-
-// pages/Cards/[id].js
 import PublicStoreDetailsWidget
   from '@/app/[locale]/(public)/stores/(widgets)/PublicStoreDetails.widget';
-import { fetch as apiCallForSsrHelper } from '@/lib/utils/Http.FetchApiSSR.util';
-import { notFound }
-  from 'next/navigation';
-import { cache }
-  from 'react';
+import { notFound } from 'next/navigation';
+import { cache } from 'react';
+import { ssrModules } from '@/lib/ssr/ssr-modules';
 
 // Cached data fetching function
-const getStoreData = cache(async (id: number) => {
+const getStoreData = cache(async (id: string) => {
   try {
-    const response = await apiCallForSsrHelper({
-      url: `/api/stores/${id}`,
-    });
-
-    if (response.status !== 200) {
-      ConsoleLogger.log(response);
-      return null;
-    }
-
-    return response.data.store;
+    return await ssrModules().provider.get(id);
   } catch (error) {
     ConsoleLogger.error('Error fetching store:', error);
     return null;
@@ -31,10 +18,9 @@ const getStoreData = cache(async (id: number) => {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
-  // Split the string and parse the last segment as an integer
   const regex = /(\d+)$/;
   const match = slug.match(regex);
-  const id = match ? parseInt(match[0]) : null;
+  const id = match ? match[0] : null;
 
   if (!id) {
     return {
@@ -43,7 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     };
   }
 
-  const store = await getStoreData(id as number);
+  const store = await getStoreData(id);
 
   if (!store) {
     return {
@@ -59,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       title: store.title,
       description: store.description,
       type: 'website',
-      url: `${Bun.env.NEXT_PUBLIC_SITE_URL}/stores/${slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}/stores/${slug}`,
     },
   };
 }
@@ -67,16 +53,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 const PublicStoreDetailsPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
   const { slug } = await params;
 
-  // Split the string and parse the last segment as an integer
   const regex = /(\d+)$/;
   const match = slug.match(regex);
-  const id = match ? parseInt(match[0]) : null;
+  const id = match ? match[0] : null;
 
   if (!id) {
     notFound();
   }
 
-  const store = await getStoreData(id as number);
+  const store = await getStoreData(id);
 
   if (!store) {
     notFound();

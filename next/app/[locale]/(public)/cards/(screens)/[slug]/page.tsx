@@ -1,17 +1,15 @@
 import { cache } from 'react';
 import PublicSingleCardWidget from '@/app/[locale]/(public)/cards/(widgets)/PublicSingleCard.widget';
-import { fetch as apiCallForSsrHelper } from '@/lib/utils/Http.FetchApiSSR.util';
 import { notFound } from 'next/navigation';
-
 import { ConsoleLogger } from '@/lib/logging/Console.logger';
+import { ssrModules } from '@/lib/ssr/ssr-modules';
+
 interface CardPageParams {
   slug: string;
   locale: string;
 }
 
 const getCardData = cache(async (slug: string) => {
-  // Card IDs are varchar — extract last segment after final hyphen
-  // Supports both numeric (e.g. "macbook-pro-123") and string IDs (e.g. "macbook-DEMO_CARD_003")
   const lastHyphen = slug.lastIndexOf('-');
 
   if (lastHyphen === -1 || lastHyphen === slug.length - 1) {
@@ -21,14 +19,7 @@ const getCardData = cache(async (slug: string) => {
 
   const id = slug.substring(lastHyphen + 1);
   try {
-    const response = await apiCallForSsrHelper({
-      url: `/api/cards/${id}`,
-    });
-
-    // SSR fetch returns raw axios response
-    // API response envelope: { success, data: { card } }
-    const envelope = response.data;
-    return envelope?.data?.card || envelope?.card || null;
+    return await ssrModules().cards.getPublicCard(id);
   } catch (error) {
     const err = error as Error;
     ConsoleLogger.error('Error fetching card:', err.message);
@@ -71,9 +62,6 @@ const PublicCardPage = async ({ params }: { params: Promise<CardPageParams> }) =
   if (!locale) {
     notFound();
   }
-
-  ConsoleLogger.log("SLUG", slug);
-  ConsoleLogger.log("LOCALE", locale);
 
   const card = await getCardData(slug);
 

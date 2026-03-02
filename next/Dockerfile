@@ -42,6 +42,18 @@ COPY next ./next
 WORKDIR /app/next
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# NEXT_PUBLIC_ vars are inlined at build time by Next.js,
+# so they must be available as ARGs during the build stage.
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_S3_PREFIX
+ARG NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+ARG NEXT_PUBLIC_ABLY_API_KEY
+
+ENV NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+ENV NEXT_PUBLIC_S3_PREFIX=${NEXT_PUBLIC_S3_PREFIX}
+ENV NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN=${NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+ENV NEXT_PUBLIC_ABLY_API_KEY=${NEXT_PUBLIC_ABLY_API_KEY}
+
 # Run next build directly (bypasses prebuild validators which are dev-only)
 RUN bun x next build
 

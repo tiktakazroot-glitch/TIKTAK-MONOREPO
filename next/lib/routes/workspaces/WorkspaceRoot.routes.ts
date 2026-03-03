@@ -25,6 +25,12 @@ export const workspacesRootRoutes: RoutesMap = {
     type: "api",
   }),
 
+  "/api/workspaces/initialize": createRoute({
+    method: "POST",
+    authRequired: true,
+    type: "api",
+  }),
+
   "/api/workspaces/onboarding": createRoute({
     method: "POST",
     authRequired: true,

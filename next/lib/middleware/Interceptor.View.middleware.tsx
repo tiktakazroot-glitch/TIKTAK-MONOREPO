@@ -158,7 +158,6 @@ export function withUiAuth<P extends object>(
 
         const { isValid, code, authData, accountId } = authResult;
 
-
         // 6. Handle Failures
         if (!isValid) {
             ConsoleLogger.log(`⛔ UI Auth failed: ${code}`);

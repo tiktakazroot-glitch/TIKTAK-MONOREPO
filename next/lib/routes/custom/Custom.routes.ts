@@ -7,7 +7,7 @@ export const customRoutes: RoutesMap = {
     // ============================================
     "/api/favorites": createRoute({
         method: "GET",
-        authRequired: true,
+        authRequired: false,
         type: "api",
     }),
     "/api/favorites/:cardId": createRoute({

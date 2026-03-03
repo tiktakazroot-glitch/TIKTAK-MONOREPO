@@ -331,8 +331,26 @@ export class AuthRepository extends BaseRepository {
                 userId: params.id,
             }).returning();
 
-            // 4. (Removed) Personal Workspace creation.
-            return { user, account, workspace: null };
+            // 4. Create Personal Provider Workspace (is_store=false, personal usage)
+            const [workspace] = await trx.insert(workspaces).values({
+                id: params.workspaceId,
+                type: 'provider',
+                title: `${params.firstName}'s Workspace`,
+                isStore: false,
+                isActive: true,
+                isBlocked: false,
+                profile: {},
+            }).returning();
+
+            // 5. Create Workspace Access (owner link)
+            await trx.insert(workspaceAccesses).values({
+                actorAccountId: params.accountId,
+                targetWorkspaceId: params.workspaceId,
+                viaWorkspaceId: params.workspaceId,
+                accessRole: 'manager',
+            });
+
+            return { user, account, workspace };
         });
     }
 

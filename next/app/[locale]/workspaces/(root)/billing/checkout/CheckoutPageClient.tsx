@@ -8,8 +8,7 @@ import { apiCall } from '@/lib/utils/Http.FetchApiSPA.util';
 import Link from 'next/link';
 
 export function CheckoutPageClient() {
-    const t = useTranslations('CheckoutPage'); // Assuming new translations or reuse keys
-    const tBilling = useTranslations('StudentBillingPage');
+    const t = useTranslations('CheckoutPage');
     const searchParams = useSearchParams();
     const tierId = searchParams.get('tierId');
 

@@ -226,9 +226,9 @@ export const staffRoutes: RoutesMap = {
   }),
 
   // ============================================
-  // Content Management APIs — Pages
+  // Content Management APIs — Docs
   // ============================================
-  "/api/workspaces/staff/:workspaceId/pages": createStaffRoute({
+  "/api/workspaces/staff/:workspaceId/docs": createStaffRoute({
     method: "GET",
     authRequired: true,
     permission: "STAFF_ACCESS",

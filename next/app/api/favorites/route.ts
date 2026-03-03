@@ -9,8 +9,13 @@ import { okResponse, errorResponse } from '@/lib/middleware/Response.Api.middlew
  * Returns array of card IDs the logged-in user has favorited
  */
 export const GET = unifiedApiHandler(async (req: NextRequest, ctx: UnifiedContext) => {
-    const accountId = ctx.authData.account.id;
+    const accountId = ctx.authData?.account?.id;
     const { log, db } = ctx;
+
+    // Not authenticated — return empty favorites
+    if (!accountId) {
+        return okResponse({ favoriteIds: [] });
+    }
 
     try {
         const rows = await db.select({
@@ -27,4 +32,5 @@ export const GET = unifiedApiHandler(async (req: NextRequest, ctx: UnifiedContex
         log.error('Failed to fetch user favorites', { error, accountId });
         return errorResponse('Failed to fetch user favorites', 500);
     }
-}, { authRequired: true });
+});
+

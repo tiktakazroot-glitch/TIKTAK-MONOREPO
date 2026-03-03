@@ -495,9 +495,13 @@ export class SessionStore {
         const row = result[0];
         if (!row || !row.roleName) return null;
 
-        // Parse permissions from JSON
-        const permsJson = (row.permissions as Record<string, boolean>) || {};
-        const permissions = Object.keys(permsJson).filter((k) => permsJson[k]);
+        // Parse permissions from JSON (handles both array and object formats)
+        const rawPerms = row.permissions;
+        const permissions: string[] = Array.isArray(rawPerms)
+            ? rawPerms
+            : (typeof rawPerms === 'object' && rawPerms !== null)
+                ? Object.keys(rawPerms as Record<string, boolean>).filter((k) => (rawPerms as Record<string, boolean>)[k])
+                : [];
 
         const access: WorkspaceAccessPayload = {
             workspaceId,
@@ -549,8 +553,12 @@ export class SessionStore {
             return { name: roleName, permissions: [], forWorkspaceType: "" };
         }
 
-        const permsJson = (row.permissions as Record<string, boolean>) || {};
-        const permissions = Object.keys(permsJson).filter((k) => permsJson[k]);
+        const rawPerms = row.permissions;
+        const permissions: string[] = Array.isArray(rawPerms)
+            ? rawPerms
+            : (typeof rawPerms === 'object' && rawPerms !== null)
+                ? Object.keys(rawPerms as Record<string, boolean>).filter((k) => (rawPerms as Record<string, boolean>)[k])
+                : [];
 
         const role: RoleDefinitionPayload = {
             name: row.name,

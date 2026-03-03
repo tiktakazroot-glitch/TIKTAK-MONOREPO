@@ -25,8 +25,8 @@ export default function AuthRegisterPage() {
         method: 'GET'
       });
 
-      const data = response as any;
-      if (data && data.user) {
+      const result = response?.data;
+      if (result && result.user) {
         // User is already logged in
         router.replace('/workspaces');
         // Do NOT set checking to false here, keep showing loader until redirect happens

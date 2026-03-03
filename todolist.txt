@@ -1,6 +1,6 @@
-@  check and remove calulcated fields from mapper
+@ check and remove calulcated fields from mapper
 @ datepicker primtive z postion maybe be fix
 @ check if workspace access expire date is handled by middleware for access control
 @ check how in18n localization loaded as colocated files by filename 
 
-@rename pages to docs  and check if sanity implemented properly to edit and render this type of content also for blogs 
+@ 

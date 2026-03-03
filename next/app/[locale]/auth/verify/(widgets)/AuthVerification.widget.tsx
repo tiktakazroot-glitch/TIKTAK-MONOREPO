@@ -73,7 +73,37 @@ export function AuthVerificationWidget({
     const [isSending, setIsSending] = useState(false);
     const [isVerifying, setIsVerifying] = useState(false);
     const [hasCodeBeenSent, setHasCodeBeenSent] = useState(false);
+    const [cooldownSeconds, setCooldownSeconds] = useState(0);
     const hasVerifiedRef = useRef(false); // prevent redirect loop after verification
+    const cooldownIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+    // Cleanup cooldown interval on unmount
+    useEffect(() => {
+        return () => {
+            if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+        };
+    }, []);
+
+    function startCooldown() {
+        setCooldownSeconds(120);
+        if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+        cooldownIntervalRef.current = setInterval(() => {
+            setCooldownSeconds((prev) => {
+                if (prev <= 1) {
+                    if (cooldownIntervalRef.current) clearInterval(cooldownIntervalRef.current);
+                    cooldownIntervalRef.current = null;
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+    }
+
+    function formatCooldown(seconds: number) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${m}:${s.toString().padStart(2, '0')}`;
+    }
 
     const isEmail = type === 'email';
     const currentTargetValue = isEmail ? userEmail : userPhone;
@@ -156,6 +186,7 @@ export function AuthVerificationWidget({
             }
 
             setHasCodeBeenSent(true);
+            startCooldown();
         } catch (err) {
             const error = err as { message?: string };
             toast.error(error?.message || t('failed_to_send'));
@@ -281,45 +312,68 @@ export function AuthVerificationWidget({
                                 className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md py-3 px-3 text-app-dark-purple dark:text-white focus:outline-none focus:ring-2 focus:ring-app-bright-purple/20 focus:border-app-bright-purple focus:bg-white dark:focus:bg-gray-800 transition-all"
                                 value={targetState}
                                 onChange={(e) => setTargetState(e.target.value)}
+                                disabled={hasCodeBeenSent}
                                 required
                             />
                         </div>
 
-                        <div className="space-y-1">
-                            <label className="block text-sm font-medium text-app-dark-purple dark:text-white" htmlFor="otp">
-                                {t('verification_code')}
-                            </label>
-                            <input
-                                className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 cursor-text py-3 px-3 text-app-dark-purple dark:text-white focus:outline-none focus:ring-2 focus:ring-app-bright-purple/20 focus:border-app-bright-purple focus:bg-white dark:focus:bg-gray-800 text-center text-2xl font-mono tracking-widest transition-all"
-                                id="otp"
-                                name="otp"
-                                type="text"
-                                placeholder="000000"
-                                value={otp}
-                                onChange={handleOtpChange}
-                                maxLength={6}
-                                required
-                            />
-                        </div>
+                        {hasCodeBeenSent && (
+                            <div className="space-y-1">
+                                <label className="block text-sm font-medium text-app-dark-purple dark:text-white" htmlFor="otp">
+                                    {t('verification_code')}
+                                </label>
+                                <input
+                                    className="w-full rounded-xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 cursor-text py-3 px-3 text-app-dark-purple dark:text-white focus:outline-none focus:ring-2 focus:ring-app-bright-purple/20 focus:border-app-bright-purple focus:bg-white dark:focus:bg-gray-800 text-center text-2xl font-mono tracking-widest transition-all"
+                                    id="otp"
+                                    name="otp"
+                                    type="text"
+                                    placeholder="000000"
+                                    value={otp}
+                                    onChange={handleOtpChange}
+                                    maxLength={6}
+                                    required
+                                    autoFocus
+                                />
+                            </div>
+                        )}
                     </div>
 
                     <div className="space-y-3 pt-2">
-                        <button
-                            className="w-full rounded-xl bg-app-bright-purple hover:bg-app-bright-purple/90 text-white font-semibold py-3 px-4 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                            type="submit"
-                            disabled={isVerifying}
-                        >
-                            {isVerifying ? texts.verifyingMessage : texts.verifyButton}
-                        </button>
+                        {!hasCodeBeenSent ? (
+                            /* Phase 1: Only show Send Code button */
+                            <button
+                                type="button"
+                                onClick={handleSendCode}
+                                className="w-full rounded-xl bg-app-bright-purple hover:bg-app-bright-purple/90 text-white font-semibold py-3 px-4 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={isSending}
+                            >
+                                {isSending ? texts.sendingMessage : texts.sendButton}
+                            </button>
+                        ) : (
+                            /* Phase 2: Show Verify button + Resend with cooldown */
+                            <>
+                                <button
+                                    className="w-full rounded-xl bg-app-bright-purple hover:bg-app-bright-purple/90 text-white font-semibold py-3 px-4 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                                    type="submit"
+                                    disabled={isVerifying}
+                                >
+                                    {isVerifying ? texts.verifyingMessage : texts.verifyButton}
+                                </button>
 
-                        <button
-                            type="button"
-                            onClick={handleSendCode}
-                            className="w-full rounded-xl bg-black/5 dark:bg-white/5 backdrop-blur-md hover:bg-black/10 dark:hover:bg-white/10 text-app-dark-purple dark:text-white font-semibold py-3 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={isSending}
-                        >
-                            {isSending ? texts.sendingMessage : (hasCodeBeenSent ? texts.resendButton : texts.sendButton)}
-                        </button>
+                                <button
+                                    type="button"
+                                    onClick={handleSendCode}
+                                    className="w-full rounded-xl bg-black/5 dark:bg-white/5 backdrop-blur-md hover:bg-black/10 dark:hover:bg-white/10 text-app-dark-purple dark:text-white font-semibold py-3 px-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                    disabled={isSending || cooldownSeconds > 0}
+                                >
+                                    {isSending
+                                        ? texts.sendingMessage
+                                        : cooldownSeconds > 0
+                                            ? `${texts.resendButton} (${formatCooldown(cooldownSeconds)})`
+                                            : texts.resendButton}
+                                </button>
+                            </>
+                        )}
 
                         {showBackLink && (
                             <button
